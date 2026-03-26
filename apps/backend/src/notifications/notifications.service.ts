@@ -8,7 +8,7 @@ import { NotificationSender } from './interface/notification-sender.interface';
 import { Notification } from './entities/notification.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WebhookSender } from './senders/webhook.sender';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { EmailSender } from './senders/email.sender';
 import { PreferenceService } from './preference.service';
 
@@ -114,7 +114,7 @@ export class NotificationService {
     } else {
       // Mark all as read
       await this.repo.update(
-        { userId, readAt: null as any },
+        { userId, readAt: IsNull() },
         { readAt: new Date() },
       );
       return { success: true };
@@ -123,7 +123,7 @@ export class NotificationService {
 
   async getUnreadCount(userId: string): Promise<number> {
     return this.repo.count({
-      where: { userId, readAt: null as any },
+      where: { userId, readAt: IsNull() },
     });
   }
 }
